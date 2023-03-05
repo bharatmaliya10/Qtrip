@@ -14,17 +14,35 @@ async function init() {
 async function fetchCities() {
   // TODO: MODULE_CITIES
   // 1. Fetch cities using the Backend API and return the data
-    let res = await fetch("http://13.234.170.160:8082/cities/");
+  try {
+    let res = await fetch("http://13.235.141.237:8082/cities/");
     let data = await res.json();
     return data;
+  } catch(err){
+    return (null);
+  }
 }
-console.log(fetchCities())
+
 
 //Implementation of DOM manipulation to add cities
 function addCityToDOM(id, city, description, image) {
   // TODO: MODULE_CITIES
   // 1. Populate the City details and insert those details into the DOM
-
+  let card = document.getElementById('data')
+  let cardchild = document.createElement('div')
+  cardchild.classList='col-12 col-sm-6 col-lg-3 mb-4'
+  cardchild.innerHTML=`
+    <a id=${id} href='pages/adventures/?city=${id}'>
+      <div class="tile">
+        <img src=${image} alt=''/>
+        <div class="tile-text text-center">
+          <h5>${city}</h5>
+          <p>${description}</p>
+        </div>
+      </div>
+    </a>
+  `
+  card.append(cardchild);
 }
 
 export { init, fetchCities, addCityToDOM };
