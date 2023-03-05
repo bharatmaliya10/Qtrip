@@ -5,21 +5,51 @@ import config from "../conf/index.js";
 function getCityFromURL(search) {
   // TODO: MODULE_ADVENTURES
   // 1. Extract the city id from the URL's Query Param and return it
-
+  return search.slice(6);
 }
 
 //Implementation of fetch call with a paramterized input based on city
 async function fetchAdventures(city) {
   // TODO: MODULE_ADVENTURES
   // 1. Fetch adventures using the Backend API and return the data
-
+  try {
+    let res = await fetch(`http://3.108.127.163:8082/adventures/?city=${city}`)
+    let data = await res.json();
+    return data;
+  } catch (err){
+    return null ;
+  }
 }
 
 //Implementation of DOM manipulation to add adventures for the given city from list of adventures
 function addAdventureToDOM(adventures) {
   // TODO: MODULE_ADVENTURES
   // 1. Populate the Adventure Cards and insert those details into the DOM
-
+  adventures.forEach(key => {
+  let parents = document.getElementById('data');
+  let child = document.createElement('div');
+  child.classList='col-6 col-lg-3 mb-3 '
+  child.innerHTML=`
+    <a id=${key.id} href='detail/?adventure=${key.id}'>
+      <div class=" activity-card ">
+        <img src=${key.image} alt="..." />
+        <div class='adventure-detail-card'>
+        <div class=" d-md-flex justify-content-between">
+          <h5 class="card-title">${key.name}</h5>
+          <p class="card-text">₹${key.costPerHead}</p>
+        </div>
+        <div class=" d-md-flex justify-content-between">
+          <h5 class="card-title">Duration</h5>
+          <p class="card-text">${key.duration} Hours</p>
+        </div>
+        </div>
+        <div class='category-banner'>${key.category}</div>
+      </div>
+    </a>
+  `
+  parents.append(child);
+    
+  });
 }
 
 //Implementation of filtering by duration which takes in a list of adventures, the lower bound and upper bound of duration and returns a filtered list of adventures.
