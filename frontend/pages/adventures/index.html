@@ -147,8 +147,18 @@
         function selectDuration(event) {
             // TODO: MODULE_FILTERS
             // 1. Change the DOM to show the selected duration filter. Use the provided input event
+            // let durationFilter = event.target.value.split('-')
             // 2. Invoke saveFiltersToLocalStorage here
+            // saveFiltersToLocalStorage('durationFilter', durationFilter);
+            document.getElementById("data").textContent = "";
 
+            let duration = event.target.value;
+            document.getElementById("duration-select").selectedIndex = 0;
+            filters["duration"] = (duration);
+
+            generateFilterPillsAndUpdateDOM(filters);
+            let filteredAdventures = filterFunction(adventures, filters);
+            addAdventureToDOM(filteredAdventures);
         }
 
         //executed when clear button is clicked on duration filter dropdown
@@ -156,7 +166,11 @@
             // TODO: MODULE_FILTERS
             // 1. Change the DOM to clear the Duration filter. Refer clearCategory() below
             // 2. Invoke saveFiltersToLocalStorage here
-
+            // localStorage.removeItem("durationFilter");
+            document.getElementById("data").textContent = "";
+            filters["duration"] = [];
+            let filteredAdventures = filterFunction(adventures, filters);
+            addAdventureToDOM(filteredAdventures);
         }
 
 
@@ -172,13 +186,13 @@
             filters["category"].push(category);
             filters["category"] = filters["category"].filter(onlyUnique);
 
-
             generateFilterPillsAndUpdateDOM(filters);
             let filteredAdventures = filterFunction(adventures, filters);
             addAdventureToDOM(filteredAdventures);
 
             // TODO: MODULE_FILTERS
             // 1. Invoke saveFiltersToLocalStorage here
+            // saveFiltersToLocalStorage ('categoryfilters',filters["category"] = filters["category"].filter(onlyUnique));
         }
 
         //executed when clear button is clicked on category filter dropdown

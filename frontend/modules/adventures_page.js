@@ -13,7 +13,7 @@ async function fetchAdventures(city) {
   // TODO: MODULE_ADVENTURES
   // 1. Fetch adventures using the Backend API and return the data
   try {
-    let res = await fetch(`http://3.110.246.235:8082/adventures/?city=${city}`)
+    let res = await fetch(config.backendEndpoint+`/adventures/?city=${city}`)
     let data = await res.json();
     return data;
   } catch (err){
@@ -55,9 +55,9 @@ function addAdventureToDOM(adventures) {
 function filterByDuration(list, low, high) {
   // TODO: MODULE_FILTERS
   // 1. Filter adventures based on Duration and return filtered list
-  let newList = list.filter((v)=>{
-    v.duration > low && v.duration < high
-  })
+  let newList = list.filter((ele) => {
+    return ele.duration >= low && ele.duration <= high
+    });
   return newList
 }
 
@@ -65,12 +65,9 @@ function filterByDuration(list, low, high) {
 function filterByCategory(list, categoryList) {
   // TODO: MODULE_FILTERS
   // 1. Filter adventures based on their Category and return filtered list
-  let filteredList;
-  categoryList.forEach((filterval)=>{
-    filteredList = list.filter((v)=>{
-      v.category === filterval
-    })
-  })
+ let filteredList = list.filter((element) => {
+    return categoryList.includes(element.category);
+});
   return filteredList;
 }
 
@@ -86,19 +83,23 @@ function filterFunction(list, filters) {
   // 1. Handle the 3 cases detailed in the comments above and return the filtered list of adventures
   // 2. Depending on which filters are needed, invoke the filterByDuration() and/or filterByCategory() methods
 let filteredList = []
-if (filters['duration'].length>0 && filters['category'].length>0){
-  filteredList = filterByCategory()
-  filteredList = filterByDuration()
-
-}
-// else if () {
-
-// }else if () {
-
-// }
-else {
+if(filters.duration === '' && filters.category.length===0){
   return list;
 }
+if(filters.duration === "" && filters.category.length!==0){
+  filteredList = filterByCategory(list,filters.category);
+}
+else if(filters.category.length === 0 && filters.duration!==""){
+  let splitDuration = filters.duration.split('-');
+  filteredList = filterByDuration(list,splitDuration[0],splitDuration[1]);
+}
+else{
+  let list1 = filterByCategory(list,filters.category);
+  let splitDuration = filters.duration.split('-');
+  let list2 = filterByDuration(list1,splitDuration[0],splitDuration[1]);
+  filteredList = list2;
+}
+return filteredList;
 
   // Place holder for functionality to work in the Stubs
 }
@@ -107,18 +108,18 @@ else {
 function saveFiltersToLocalStorage(filters) {
   // TODO: MODULE_FILTERS
   // 1. Store the filters as a String to localStorage
-  
-  return true;
+  localStorage.setItem('filters', JSON.stringify(filters));
+    return true;
 }
 
 //Implementation of localStorage API to get filters from local storage. This should get called whenever the DOM is loaded.
 function getFiltersFromLocalStorage() {
   // TODO: MODULE_FILTERS
   // 1. Get the filters from localStorage and return String read as an object
-
+  let filters = JSON.parse(localStorage.getItem('filters'));
 
   // Place holder for functionality to work in the Stubs
-  return null;
+  return filters;
 }
 
 //Implementation of DOM manipulation to add the following filters to DOM :
@@ -128,12 +129,14 @@ function getFiltersFromLocalStorage() {
 function generateFilterPillsAndUpdateDOM(filters) {
   // TODO: MODULE_FILTERS
   // 1. Use the filters given as input, update the Duration Filter value and Generate Category Pills
-  let parents = document.getElementById('category-list');
-  let child = document.createElement('div');
-  child.className='category-filter'
-  filters.forEach((v)=>{
-    child.innerText=`${v}`
-    parents.append(child);
+  let categoryList = filters.category;
+  let domCategory = document.getElementById('category-list');
+  domCategory.innerHTML = '';
+  categoryList.forEach((item)=>{
+    let spanT = document.createElement("spanT");
+    spanT.setAttribute('class', 'category-filter');
+    spanT.innerText = item;
+    domCategory.appendChild(spanT)
   })
 }
 export {
