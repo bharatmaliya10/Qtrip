@@ -20,7 +20,6 @@ async function fetchAdventureDetails(adventureId) {
   let data = await res.json();
   return data;
   } catch(err){
-  console.log(err)
     return null;
   }
   // Place holder for functionality to work in the Stubs
@@ -83,14 +82,22 @@ function addBootstrapPhotoGallery(images) {
 function conditionalRenderingOfReservationPanel(adventure) {
   // TODO: MODULE_RESERVATIONS
   // 1. If the adventure is already reserved, display the sold-out message.
-
+  if(adventure.available){
+    document.getElementById('reservation-panel-sold-out').style.display='none'
+    document.getElementById('reservation-panel-available').style.display='block'
+    document.getElementById("reservation-person-cost").innerHTML = adventure.costPerHead
+  } else {
+    document.getElementById('reservation-panel-sold-out').style.display='block'
+    document.getElementById('reservation-panel-available').style.display='none'
+  }
 }
 
 //Implementation of reservation cost calculation based on persons
 function calculateReservationCostAndUpdateDOM(adventure, persons) {
   // TODO: MODULE_RESERVATIONS
   // 1. Calculate the cost based on number of persons and update the reservation-cost field
-
+let totalcost =adventure.costPerHead * persons
+document.getElementById('reservation-cost').innerHTML = totalcost
 }
 
 //Implementation of reservation form submission
@@ -98,13 +105,47 @@ function captureFormSubmit(adventure) {
   // TODO: MODULE_RESERVATIONS
   // 1. Capture the query details and make a POST API call using fetch() to make the reservation
   // 2. If the reservation is successful, show an alert with "Success!" and refresh the page. If the reservation fails, just show an alert with "Failed!".
+  let myForm = document.getElementById('myForm')
+  myForm.addEventListener('submit', async(e)=>{
+    e.preventDefault();
+    let url = config.backendEndpoint+'/reservations/new'
+    let formElem = myForm.elements;
+    let payLoad = {
+      name:formElem['name'].value.trim(),
+      date:formElem['date'].value,
+      person:formElem['person'].value,
+      adventure:adventure.id,
+    }
+    try{
+      let res = await fetch(url, {
+        method:'POST',
+        body:JSON.stringify(payLoad),
+        headers:{
+          'Content-type': 'application/json'
+        }
+      })
+      if(res.ok){
+      alert('Success')
+      }else{
+        alert('failed')
+      }
+    }catch(err){
+      alert('Failed to fetch')
+    }
+  })
 }
 
 //Implementation of success banner after reservation
 function showBannerIfAlreadyReserved(adventure) {
   // TODO: MODULE_RESERVATIONS
   // 1. If user has already reserved this adventure, show the reserved-banner, else don't
+  if(adventure.reserved){
+    document.getElementById('reserved-banner').style.display='block'
 
+  }else {
+    document.getElementById('reserved-banner').style.display='none'
+
+  }
 }
 
 export {

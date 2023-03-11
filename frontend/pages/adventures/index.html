@@ -115,7 +115,7 @@
         //Checks if filters are available in local storage and sets the value accordingly
         // The structure of "filters" object is { duration : "6-10", category : [] }, which basically means duration is single-value filter and category is multi-value filter
 
-        let filters =   
+        let filters =
             getFiltersFromLocalStorage() !== null
                 ? getFiltersFromLocalStorage()
                 : { duration: "", category: [] };
