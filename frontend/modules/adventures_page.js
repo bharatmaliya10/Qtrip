@@ -70,7 +70,7 @@ function filterByCategory(list, categoryList) {
  let filteredList = list.filter((element) => {
     return categoryList.includes(element.category);
 });
-  return  ;
+  return filteredList ;
 }
 
 // filters object looks like this filters = { duration: "", category: [] };
