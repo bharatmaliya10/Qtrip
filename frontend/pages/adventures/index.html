@@ -117,10 +117,7 @@
         //Checks if filters are available in local storage and sets the value accordingly
         // The structure of "filters" object is { duration : "6-10", category : [] }, which basically means duration is single-value filter and category is multi-value filter
 
-        let filters =
-            getFiltersFromLocalStorage() !== null
-                ? getFiltersFromLocalStorage()
-                : { duration: "", category: [] };
+        let filters = getFiltersFromLocalStorage() !== null ? getFiltersFromLocalStorage(): { duration: "", category: [] };
 
 
         //entry point (executed when DOM is loaded)
@@ -168,7 +165,7 @@
             // 2. Invoke saveFiltersToLocalStorage here
             // localStorage.removeItem("durationFilter");
             document.getElementById("data").textContent = "";
-            filters["duration"] = [];
+            filters["duration"] = "";
             let filteredAdventures = filterFunction(adventures, filters);
             addAdventureToDOM(filteredAdventures);
         }

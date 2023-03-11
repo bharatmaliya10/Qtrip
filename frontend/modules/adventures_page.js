@@ -5,8 +5,10 @@ import config from "../conf/index.js";
 function getCityFromURL(search) {
   // TODO: MODULE_ADVENTURES
   // 1. Extract the city id from the URL's Query Param and return it
-  return search.slice(6);
-}
+  const params = new URLSearchParams(search); 
+  const city = params.get('city');
+  return city;
+  }
 
 //Implementation of fetch call with a paramterized input based on city
 async function fetchAdventures(city) {
@@ -68,7 +70,7 @@ function filterByCategory(list, categoryList) {
  let filteredList = list.filter((element) => {
     return categoryList.includes(element.category);
 });
-  return filteredList;
+  return  ;
 }
 
 // filters object looks like this filters = { duration: "", category: [] };
